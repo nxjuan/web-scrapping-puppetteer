@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "target": "ES2016",  // Você pode manter ES2016 ou usar ES6 ou ES2015
+    "experimentalDecorators": true,  // Necessário para usar decorators
+    "emitDecoratorMetadata": true,  // Necessário para metadados de decorators
+    "moduleResolution": "node",  // Melhor configuração de resolução de módulos
+    "strict": true,  // Habilita todas as verificações rigorosas de tipos (opcional, mas bom para segurança)
+    "esModuleInterop": true,  // Facilita importações do CommonJS
+    "skipLibCheck": true,  // Ignora verificações de tipos de bibliotecas
+    "forceConsistentCasingInFileNames": true  // Garante consistência nos nomes dos arquivos
+  }
+}

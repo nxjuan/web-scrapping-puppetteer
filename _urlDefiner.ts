@@ -1,0 +1,3 @@
+export function buildUrl(departureDate: string, returnDate: string, originAirport: string, destinationAirport: string): string {
+    return `https://www.smiles.com.br/mfe/emissao-passagem/?adults=1&cabin=ALL&children=0&departureDate=${departureDate}&infants=0&isElegible=false&isFlexibleDateChecked=false&returnDate=${returnDate}&searchType=g3&segments=1&tripType=2&originAirport=${originAirport}&originCity=&originCountry=&originAirportIsAny=false&destinationAirport=${destinationAirport}&destinCity=&destinCountry=&destinAirportIsAny=false&novo-resultado-voos=true`;
+}

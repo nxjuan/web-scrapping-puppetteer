@@ -1,0 +1,112 @@
+[
+  {
+    "company": "GOL Linhas Aéreas",
+    "seat": "Econômica",
+    "departureTime": "09h00",
+    "arrivalTime": "05h00",
+    "origin": "São Paulo",
+    "destination": "Miami",
+    "duration": "22h00min",
+    "price": "A partir de 101.000 milhas ou R$ 1.971,85 por viajante",
+    "flightType": "1 parada"
+  },
+  {
+    "company": "GOL Linhas Aéreas",
+    "seat": "Econômica",
+    "departureTime": "15h50",
+    "arrivalTime": "05h00",
+    "origin": "São Paulo",
+    "destination": "Miami",
+    "duration": "15h10min",
+    "price": "A partir de 101.000 milhas ou R$ 1.971,85 por viajante",
+    "flightType": "1 parada"
+  },
+  {
+    "company": "GOL Linhas Aéreas",
+    "seat": "Econômica",
+    "departureTime": "21h50",
+    "arrivalTime": "15h55",
+    "origin": "São Paulo",
+    "destination": "Miami",
+    "duration": "20h05min",
+    "price": "A partir de 101.000 milhas ou R$ 1.971,85 por viajante",
+    "flightType": "1 parada"
+  },
+  {
+    "company": "Avianca",
+    "seat": "Econômica",
+    "departureTime": "07h35",
+    "arrivalTime": "16h50",
+    "origin": "São Paulo",
+    "destination": "Miami",
+    "duration": "11h15min",
+    "price": "A partir de 147.300 milhas por viajante",
+    "flightType": "1 parada"
+  },
+  {
+    "company": "Avianca",
+    "seat": "Econômica",
+    "departureTime": "16h35",
+    "arrivalTime": "03h15",
+    "origin": "São Paulo",
+    "destination": "Miami",
+    "duration": "12h40min",
+    "price": "A partir de 147.300 milhas por viajante",
+    "flightType": "1 parada"
+  },
+  {
+    "company": "Avianca",
+    "seat": "Econômica",
+    "departureTime": "04h10",
+    "arrivalTime": "16h50",
+    "origin": "São Paulo",
+    "destination": "Miami",
+    "duration": "14h40min",
+    "price": "A partir de 147.300 milhas por viajante",
+    "flightType": "1 parada"
+  },
+  {
+    "company": "Avianca",
+    "seat": "Econômica",
+    "departureTime": "16h35",
+    "arrivalTime": "09h00",
+    "origin": "São Paulo",
+    "destination": "Miami",
+    "duration": "18h25min",
+    "price": "A partir de 147.300 milhas por viajante",
+    "flightType": "1 parada"
+  },
+  {
+    "company": "Avianca",
+    "seat": "Econômica",
+    "departureTime": "16h35",
+    "arrivalTime": "11h40",
+    "origin": "São Paulo",
+    "destination": "Miami",
+    "duration": "21h05min",
+    "price": "A partir de 147.300 milhas por viajante",
+    "flightType": "1 parada"
+  },
+  {
+    "company": "Avianca",
+    "seat": "Econômica",
+    "departureTime": "04h10",
+    "arrivalTime": "03h15",
+    "origin": "São Paulo",
+    "destination": "Miami",
+    "duration": "25h05min",
+    "price": "A partir de 180.700 milhas por viajante",
+    "flightType": "1 parada"
+  },
+  {
+    "company": "Avianca",
+    "seat": "Econômica",
+    "departureTime": "16h35",
+    "arrivalTime": "16h50",
+    "origin": "São Paulo",
+    "destination": "Miami",
+    "duration": "26h15min",
+    "price": "A partir de 180.700 milhas por viajante",
+    "flightType": "1 parada"
+  }
+]
