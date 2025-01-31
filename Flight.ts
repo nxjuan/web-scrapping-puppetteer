@@ -8,4 +8,5 @@ export interface FlightData {
     duration: string | null;
     price: string | null;
     flightType: string | null;
+    date: string | null;
 }
