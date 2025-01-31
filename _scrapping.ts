@@ -1,26 +1,21 @@
 import fs from 'fs';
 import puppeteer, { Page } from 'puppeteer';
 
-import { buildUrl } from './_urlDefiner';  // Importando a função buildUrl
+import { buildUrl } from './_urlDefiner';  
 import { fetchApi } from './_fetch';
 
+const oneDayInMillis = 24 * 60 * 60 * 1000; // Milissegundos em um dia
 
+// Defina as datas corretamente
+const departureDate = new Date('2025-02-01').getTime(); // Data inicial em milissegundos
+const finalDate = new Date('2025-02-10').getTime(); // Data final em milissegundos
+const daysIncrement = 1; // Incremento de dias (por exemplo, 7 dias)
 
-const oneDayInMillis = 24 * 60 * 60 * 1000;
+const originAirport = 'GRU';
+const destinationAirport = 'MIA';
 
-const finalDate = new Date('2025-01-10').getTime();
-
-
-const departureDate = '1738681200000';
-const returnDate = ''
-const originAirport ='GRU'
-const destinationAirport = 'MIA'
-
-
-
-async function scrapeWithPuppeteer() {
-
-    const url = buildUrl(departureDate, returnDate, originAirport, destinationAirport);
+async function scrapeWithPuppeteer(departureDate: number) {
+    const url = buildUrl(departureDate.toString(), '', originAirport, destinationAirport);
     
     const browser = await puppeteer.launch({ headless: false });
     const page = await browser.newPage();
@@ -32,8 +27,6 @@ async function scrapeWithPuppeteer() {
         const flights: any[] = [];
         const items = document.querySelectorAll('.select-flight-list-accordion-item.false');
         
-        //quero que o metodo fique aqui
-
         items.forEach((item) => {
             const company = item.querySelector('.company')?.textContent?.trim();
             const seat = item.querySelector('.seat')?.textContent?.trim();
@@ -72,8 +65,21 @@ async function scrapeWithPuppeteer() {
     console.log(flightData);
     await browser.close();
 }
-scrapeWithPuppeteer();
 
+async function runScrapingLoop() {
+    let currentDate = departureDate; // Usamos uma variável separada para controlar a data atual
 
+    while (currentDate <= finalDate) {
+        console.log(`Scraping for date: ${new Date(currentDate).toISOString()}`); // Log para depuração
+        await scrapeWithPuppeteer(currentDate);
+        currentDate += daysIncrement * oneDayInMillis; // Incrementa a data atual
+    }
+    console.log('Scraping finished. Final date reached.'); // Log para depuração
+}
 
-
+// Verifica se a data inicial é válida
+if (departureDate > finalDate) {
+    console.error('Error: departureDate is greater than finalDate. Please check the dates.');
+} else {
+    runScrapingLoop();
+}
