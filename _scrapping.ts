@@ -3,27 +3,13 @@ import puppeteer, { Page } from 'puppeteer';
 
 import { buildUrl } from './_urlDefiner';  
 import { fetchApi } from './_fetch';
-
-const oneDayInMillis = 24 * 60 * 60 * 1000; // Milissegundos em um dia
-
-// Defina as datas corretamente
-const departureDate = new Date('2025-02-01').getTime(); // Data inicial em milissegundos
-const finalDate = new Date('2025-02-10').getTime(); // Data final em milissegundos
-const daysIncrement = 1; // Incremento de dias (por exemplo, 7 dias)
+import { showMoreButton } from './_showMore';
 
 const originAirport = 'GRU';
 const destinationAirport = 'MIA';
 
-async function scrapeWithPuppeteer(departureDate: number) {
-    const url = buildUrl(departureDate.toString(), '', originAirport, destinationAirport);
-    
-    const browser = await puppeteer.launch({ headless: false });
-    const page = await browser.newPage();
-    await page.goto(url, { waitUntil: 'domcontentloaded' });
-
-    await page.waitForSelector('.select-flight-list-accordion-item.false');
-
-    const flightData = await page.evaluate(() => {
+async function extractFlightData(page: Page, departureDate: number) {
+    return await page.evaluate((departureDate) => {
         const flights: any[] = [];
         const items = document.querySelectorAll('.select-flight-list-accordion-item.false');
         
@@ -49,37 +35,49 @@ async function scrapeWithPuppeteer(departureDate: number) {
                     duration,
                     price,
                     flightType,
+                    date: new Date(departureDate).toISOString()
                 });
             }
         });
 
         return flights;
-    });
-
-    // Salvar em arquivo
-    fs.writeFileSync('output.json', JSON.stringify(flightData, null, 2), 'utf-8');
-    
-    // Enviar dados para API
-    fetchApi(flightData);
-
-    console.log(flightData);
-    await browser.close();
+    }, departureDate);
 }
 
-async function runScrapingLoop() {
-    let currentDate = departureDate; // Usamos uma variável separada para controlar a data atual
+export async function scrapeWithPuppeteer(departureDate: number) {
+    try {
+        const url = buildUrl(departureDate.toString(), '', originAirport, destinationAirport);
+        
+        const browser = await puppeteer.launch({ headless: false });
+        const page = await browser.newPage();
+        await page.goto(url, { waitUntil: 'domcontentloaded' });
 
-    while (currentDate <= finalDate) {
-        console.log(`Scraping for date: ${new Date(currentDate).toISOString()}`); // Log para depuração
-        await scrapeWithPuppeteer(currentDate);
-        currentDate += daysIncrement * oneDayInMillis; // Incrementa a data atual
+        await page.waitForSelector('.select-flight-list-accordion-item.false');
+
+        let flightData = await extractFlightData(page, departureDate);
+
+        const otherCompaniesButton = await page.$('#SelectFlightHeader-ida-button-congener');
+        if (otherCompaniesButton) {
+            await otherCompaniesButton.click();
+            console.log('Botão "Outras companhias" clicado.');
+
+
+            const additionalFlightData = await extractFlightData(page, departureDate);
+            flightData = flightData.concat(additionalFlightData); 
+        } else {
+            console.log('Botão "Outras companhias" não encontrado.');
+        }
+
+        await showMoreButton(page);
+
+        fs.writeFileSync('output.json', JSON.stringify(flightData, null, 2), 'utf-8');
+        
+        fetchApi(flightData);
+
+        console.log(flightData);
+        console.log("    :)    ");
+        await browser.close();
+    } catch (error) {
+        console.error('Erro durante o scraping:', error);
     }
-    console.log('Scraping finished. Final date reached.'); // Log para depuração
-}
-
-// Verifica se a data inicial é válida
-if (departureDate > finalDate) {
-    console.error('Error: departureDate is greater than finalDate. Please check the dates.');
-} else {
-    runScrapingLoop();
 }
