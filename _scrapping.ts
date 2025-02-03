@@ -2,7 +2,7 @@ import fs from 'fs';
 import puppeteer, { Page } from 'puppeteer';
 
 import { buildUrl } from './_urlDefiner';  
-import { fetchApi } from './_fetch';
+import { insertFlightData } from './_insert';
 import { showMoreButton } from './_showMore';
 
 const originAirport = 'GRU';
@@ -72,7 +72,7 @@ export async function scrapeWithPuppeteer(departureDate: number) {
 
         fs.writeFileSync('output.json', JSON.stringify(flightData, null, 2), 'utf-8');
         
-        fetchApi(flightData);
+        insertFlightData(flightData);
 
         console.log(flightData);
         console.log("    :)    ");
