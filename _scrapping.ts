@@ -5,8 +5,7 @@ import { buildUrl } from './_urlDefiner';
 import { insertFlightData } from './_insert';
 import { showMoreButton } from './_showMore';
 
-const originAirport = 'GRU';
-const destinationAirport = 'MIA';
+
 
 async function extractFlightData(page: Page, departureDate: number) {
     return await page.evaluate((departureDate) => {
@@ -44,15 +43,36 @@ async function extractFlightData(page: Page, departureDate: number) {
     }, departureDate);
 }
 
-export async function scrapeWithPuppeteer(departureDate: number) {
+export async function scrapeWithPuppeteer(departureDate: number, originAirport: string, destinationAirport: string) {
+    const maxRefreshAttempts = 2;
+    let refreshCount = 0;
+    const url = buildUrl(departureDate.toString(), '', originAirport, destinationAirport);
+    console.log('\x1b[35m', url, '\x1b[0m');
+
+    const browser = await puppeteer.launch({ headless: false });
+    const page = await browser.newPage();
+
     try {
-        const url = buildUrl(departureDate.toString(), '', originAirport, destinationAirport);
-        
-        const browser = await puppeteer.launch({ headless: false });
-        const page = await browser.newPage();
+        const waitForSelectorWithRefresh = async () => {
+            while (refreshCount <= maxRefreshAttempts) {
+                try {
+                    await page.waitForSelector('.select-flight-list-accordion-item.false', { timeout: 30000 });
+                    return; 
+                } catch (error) {
+                    if (refreshCount < maxRefreshAttempts) {
+                        console.log(`Seletor não encontrado. Recarregando a página... Tentativa ${refreshCount + 1}/${maxRefreshAttempts}`);
+                        await page.reload({ waitUntil: 'domcontentloaded' });
+                        refreshCount++;
+                    } else {
+                        throw new Error(`Seletor não encontrado após ${maxRefreshAttempts} tentativas de refresh.`);
+                    }
+                }
+            }
+        };
+
         await page.goto(url, { waitUntil: 'domcontentloaded' });
 
-        await page.waitForSelector('.select-flight-list-accordion-item.false');
+        await waitForSelectorWithRefresh();
 
         let flightData = await extractFlightData(page, departureDate);
 
@@ -61,9 +81,8 @@ export async function scrapeWithPuppeteer(departureDate: number) {
             await otherCompaniesButton.click();
             console.log('Botão "Outras companhias" clicado.');
 
-
             const additionalFlightData = await extractFlightData(page, departureDate);
-            flightData = flightData.concat(additionalFlightData); 
+            flightData = flightData.concat(additionalFlightData);
         } else {
             console.log('Botão "Outras companhias" não encontrado.');
         }
@@ -71,13 +90,16 @@ export async function scrapeWithPuppeteer(departureDate: number) {
         await showMoreButton(page);
 
         fs.writeFileSync('output.json', JSON.stringify(flightData, null, 2), 'utf-8');
-        
         insertFlightData(flightData);
 
-        console.log(flightData);
-        console.log("    :)    ");
+        flightData.forEach(flight => {
+            console.log(`${flight.company}, ${flight.seat}, ${flight.date}, ${flight.price}`);
+        });
+
+        console.log("    :)    \n\n");
         await browser.close();
     } catch (error) {
         console.error('Erro durante o scraping:', error);
+        await browser.close(); 
     }
 }

@@ -6,9 +6,9 @@ export async function showMoreButton(page: Page) {
             const button = await page.$('#SelectFlightList-ida-more');
             if (!button) return;
             await button.click();
-            console.log('botão clicado')
+            console.log('botão clicado');
         }
     } catch (error) {
-        console.error('Erro ao clicar no botão:', error);
+        console.error('\x1b[31mErro ao clicar no botão:\x1b[0m ', error);
     }
 }

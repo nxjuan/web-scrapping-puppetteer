@@ -24,7 +24,7 @@ export async function insertFlightData(flightData: FlightData[]) {
             await pool.query(query, values);
         }
 
-        console.log("Dados inseridos no banco com sucesso!");
+        console.log('\x1b[33m%s\x1b[0m', "Dados inseridos no banco com sucesso!");
     } catch (error) {
         console.error("Erro ao inserir dados no banco:", error);
     }

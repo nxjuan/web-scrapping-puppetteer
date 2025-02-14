@@ -20,6 +20,8 @@ export async function clickOtherCompaniesButton(page: Page) {
             console.log('Botão "Outras companhias" não encontrado.');
         }
     } catch (error) {
-        console.error('Erro ao interagir com o botão "Outras companhias":', error);
+        console.error('\x1b[31mErro ao interagir com o botão "Outras companhias":\x1b[0m', error);
+
+
     }
 }

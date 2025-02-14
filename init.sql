@@ -1,4 +1,3 @@
-
 CREATE TABLE IF NOT EXISTS voos (
     id SERIAL PRIMARY KEY,
     company VARCHAR(255),
